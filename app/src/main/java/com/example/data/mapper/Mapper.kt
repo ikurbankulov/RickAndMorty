@@ -12,13 +12,11 @@ class Mapper {
             name = type.name,
             status = type.status,
             image = type.image,
-            created = type.created,
             gender = type.gender,
             location = mapLocationFromEntity(type.location),
             species = type.species,
             type = type.type,
             url = type.url,
-            isBookMarked = type.isBookMarked
         )
     }
 
@@ -28,13 +26,11 @@ class Mapper {
             name = type.name,
             status = type.status,
             image = type.image,
-            created = type.created,
             gender = type.gender,
             location = mapLocationToEntity(type.location),
             species = type.species,
             type = type.type,
             url = type.url,
-            isBookMarked = type.isBookMarked
         )
     }
 

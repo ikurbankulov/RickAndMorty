@@ -11,8 +11,6 @@ data class CharacterEntity(
     val status: String,
     @SerializedName("image")
     val image: String,
-    @SerializedName("created")
-    val created: String,
     @SerializedName("gender")
     val gender: String,
     @SerializedName("location")
@@ -23,6 +21,4 @@ data class CharacterEntity(
     val type: String,
     @SerializedName("url")
     val url: String,
-    @SerializedName("isBookMarked")
-    var isBookMarked: Boolean
 )

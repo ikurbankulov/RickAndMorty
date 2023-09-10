@@ -5,12 +5,12 @@ import com.example.data.network.ApiFactory
 import com.example.domain.models.Character
 import com.example.domain.repository.Repository
 
-interface RepositoryImpl : Repository{
+class RepositoryImpl : Repository{
 
-    val mapper: Mapper
+   private val mapper = Mapper()
 
     override suspend fun getCharacterList(): List<Character> {
-        val characterList   = ApiFactory.apiService.loadCharacters().result
+        val characterList   = ApiFactory.apiService.loadCharacters(page = 2).result
         return characterList.map { it -> mapper.mapFromEntity(it) }
     }
 

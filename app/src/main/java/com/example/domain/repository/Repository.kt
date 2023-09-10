@@ -1,5 +1,6 @@
 package com.example.domain.repository
 
+import com.example.data.paging.PagingSource
 import com.example.domain.models.Character
 
 interface Repository {
