@@ -19,6 +19,8 @@ class CharacterDetailFragment : Fragment() {
     private val binding
         get() = _binding ?: throw RuntimeException(BINDING_NULL_MESSAGE)
 
+    private var isFavorite = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,21 +35,50 @@ class CharacterDetailFragment : Fragment() {
         viewModel = ViewModelProvider(this)[CharacterDetailViewModel::class.java]
         val characterId = requireArguments().getInt(EXTRA_ID)
         characterId.let { viewModel.loadCharacter(it) }
-                viewModel.character.observe(viewLifecycleOwner) {
-                    Glide.with(this)
-                        .load(it.image)
-                        .override(500,500)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(binding.imageViewCharacter)
 
-                    with(binding) {
-                        textViewCharacterName.text = it.name
-                        textViewStatus.text = it.status
-                        textViewGender.text = it.gender
-                        textViewSpecies.text = it.species
-                        textViewGenderLocation.text = it.location.name
-                    }
+        viewModel.character.observe(viewLifecycleOwner) {
+            Glide.with(this)
+                .load(it.image)
+                .override(500, 500)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(binding.imageViewCharacter)
+
+            with(binding) {
+                textViewCharacterName.text = it.name
+                textViewStatus.text = it.status
+                textViewGender.text = it.gender
+                textViewSpecies.text = it.species
+                textViewGenderLocation.text = it.location.name
+            }
+        }
+
+        viewModel.isCharacterInFavorites(characterId).observe(viewLifecycleOwner) { isFav ->
+            isFavorite = isFav
+            updateFavoriteIcon()
+        }
+
+
+        binding.favouriteImageView.setOnClickListener {
+            val character = viewModel.character.value
+            character?.let {
+                if (isFavorite) {
+                    viewModel.removeFromFavourites(it)
+                } else {
+                    viewModel.addToFavourites(it)
                 }
+                isFavorite = !isFavorite
+                updateFavoriteIcon()
+            }
+        }
+    }
+
+    private fun updateFavoriteIcon() {
+        val favoriteIconResId = if (isFavorite) {
+            android.R.drawable.btn_star_big_on
+        } else {
+            android.R.drawable.btn_star_big_off
+        }
+        binding.favouriteImageView.setImageResource(favoriteIconResId)
     }
 
     override fun onDestroyView() {
