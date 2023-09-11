@@ -1,48 +1,48 @@
-package com.example.data.mapper
+package com.example.data.network.mapper
 
-import com.example.data.models.CharacterEntity
-import com.example.data.models.LocationEntity
+import com.example.data.network.models.CharacterDto
+import com.example.data.network.models.LocationDto
 import com.example.domain.models.Character
 import com.example.domain.models.Location
 
 class Mapper {
-    fun mapFromEntity(type: CharacterEntity): Character {
+    fun mapFromDto(type: CharacterDto): Character {
         return Character(
             id = type.id,
             name = type.name,
             status = type.status,
             image = type.image,
             gender = type.gender,
-            location = mapLocationFromEntity(type.location),
+            location = mapLocationFromDto(type.location),
             species = type.species,
             type = type.type,
             url = type.url,
         )
     }
 
-    fun mapToEntity(type: Character): CharacterEntity {
-        return CharacterEntity(
+    fun mapToDto(type: Character): CharacterDto {
+        return CharacterDto(
             id = type.id,
             name = type.name,
             status = type.status,
             image = type.image,
             gender = type.gender,
-            location = mapLocationToEntity(type.location),
+            location = mapLocationToDto(type.location),
             species = type.species,
             type = type.type,
             url = type.url,
         )
     }
 
-    private fun mapLocationFromEntity(type: LocationEntity): Location {
+    private fun mapLocationFromDto(type: LocationDto): Location {
         return Location(
             name = type.name,
             url = type.url
         )
     }
 
-    private fun mapLocationToEntity(type: Location): LocationEntity {
-        return LocationEntity(
+    private fun mapLocationToDto(type: Location): LocationDto {
+        return LocationDto(
             name = type.name,
             url = type.url
         )

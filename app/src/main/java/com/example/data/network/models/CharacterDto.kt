@@ -1,8 +1,8 @@
-package com.example.data.models
+package com.example.data.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class CharacterEntity(
+data class CharacterDto(
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")
@@ -14,7 +14,7 @@ data class CharacterEntity(
     @SerializedName("gender")
     val gender: String,
     @SerializedName("location")
-    val location: LocationEntity,
+    val location: LocationDto,
     @SerializedName("species")
     val species: String,
     @SerializedName("type")

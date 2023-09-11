@@ -1,16 +1,27 @@
 package com.example.presentation.screens.list
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.data.local.database.DataBase
+import com.example.data.local.models.CharacterDbModel
+import com.example.data.local.models.LocationDbModel
+import com.example.domain.models.Character
+import com.example.domain.models.Location
 import com.example.presentation.screens.detail.CharacterDetailFragment
+import com.example.presentation.screens.favourite.FavouriteFragment
 import com.example.presentation.screens.list.adapter.RecyclerViewAdapter
+import com.example.presentation.screens.search.SearchFragment
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharacterListBinding
+import kotlinx.coroutines.launch
 
 class CharacterListFragment : Fragment() {
 
@@ -44,16 +55,30 @@ class CharacterListFragment : Fragment() {
         }
     }
 
+    private fun replaceFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun setupClickListener() {
         adapter.onItemClickListener = { character ->
-            Toast.makeText(requireContext(), character.name, Toast.LENGTH_SHORT).show()
             val characterDetailFragment = CharacterDetailFragment.newInstance(character.id)
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, characterDetailFragment)
-                .addToBackStack(null)
-                .commit()
+            replaceFragment(characterDetailFragment)
+        }
+
+        binding.buttonFavorites.setOnClickListener {
+            val favouriteFragment = FavouriteFragment.newInstance()
+            replaceFragment(favouriteFragment)
+        }
+
+        binding.buttonSearch.setOnClickListener {
+            val searchFragment = SearchFragment.newInstance()
+            replaceFragment(searchFragment)
         }
     }
+
 
 
     override fun onDestroyView() {

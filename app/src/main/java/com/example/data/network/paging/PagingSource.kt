@@ -1,15 +1,15 @@
-package com.example.data.paging
+package com.example.data.network.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.data.models.CharacterEntity
-import com.example.data.network.ApiService
+import com.example.data.network.models.CharacterDto
+import com.example.data.network.source.ApiService
 
 class PagingSource(
     private val api: ApiService
-) : PagingSource<Int, CharacterEntity>() {
+) : PagingSource<Int, CharacterDto>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterEntity> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterDto> {
         return try {
             val page = params.key ?: 1
             val response = api.loadCharacters(page)
@@ -27,7 +27,7 @@ class PagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, CharacterEntity>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, CharacterDto>): Int? {
         return null
     }
 }

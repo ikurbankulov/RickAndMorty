@@ -147,7 +147,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:src="@android:drawable/btn_star"
+        tools:src="@android:drawable/btn_star"
         app:layout_constraintBottom_toBottomOf="@id/image_card_view"
         app:layout_constraintEnd_toEndOf="@id/rootView"
         app:layout_constraintStart_toEndOf="@id/image_card_view"

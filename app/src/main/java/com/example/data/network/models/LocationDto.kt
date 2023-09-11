@@ -1,8 +1,8 @@
-package com.example.data.models
+package com.example.data.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class LocationEntity(
+data class LocationDto(
     @SerializedName("name")
     val name: String,
     @SerializedName("url")
