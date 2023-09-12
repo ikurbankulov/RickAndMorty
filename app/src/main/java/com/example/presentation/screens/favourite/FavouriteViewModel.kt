@@ -25,8 +25,8 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun loadCharacterList() {
-        val characterList = getCharactersFromDb.invoke()
-        _characterList.value = characterList.value
-
+        viewModelScope.launch {
+            _characterList.postValue(getCharactersFromDb.invoke())
+        }
     }
 }
