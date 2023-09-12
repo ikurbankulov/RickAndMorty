@@ -56,6 +56,7 @@ class FavouriteFragment : Fragment() {
     private fun replaceFragment(fragment: Fragment){
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 

@@ -16,17 +16,7 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository = RepositoryImpl(application)
     private val getCharactersFromDb = GetCharactersFromDatabaseUseCase(repository)
+     val characterList: LiveData<List<Character>>
+         get() = getCharactersFromDb.invoke()
 
-    private val _characterList = MutableLiveData<List<Character>>()
-    val characterList: LiveData<List<Character>> = _characterList
-
-    init {
-        loadCharacterList()
     }
-
-    private fun loadCharacterList() {
-        viewModelScope.launch {
-            _characterList.postValue(getCharactersFromDb.invoke())
-        }
-    }
-}

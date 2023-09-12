@@ -11,7 +11,7 @@ import com.example.data.local.models.CharacterDbModel
 interface CharacterDao {
 
     @Query("SELECT * FROM favourite_character ORDER BY id DESC")
-    suspend fun getAllCharacters(): List<CharacterDbModel>
+     fun getAllCharacters(): LiveData<List<CharacterDbModel>>
 
     @Query("SELECT * FROM favourite_character WHERE id = :id")
      fun getCharacterById(id: Int): LiveData<CharacterDbModel>?

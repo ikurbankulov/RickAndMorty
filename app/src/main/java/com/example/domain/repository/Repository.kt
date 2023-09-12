@@ -15,7 +15,7 @@ interface Repository {
 
     suspend fun removeFromFavourites(id: Int)
 
-   suspend fun getCharactersFromDatabase(): List<Character>
+    fun getCharactersFromDatabase(): LiveData<List<Character>>
 
     fun isCharacterInFavorites(id: Int): LiveData<Boolean>
 

@@ -28,8 +28,13 @@ class RepositoryImpl(application: Application) : Repository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getCharactersFromDatabase(): List<Character> =
-        mapper.mapListDbModelToListDomain(dao.getAllCharacters())
+    override fun getCharactersFromDatabase(): LiveData<List<Character>> =
+        MediatorLiveData<List<Character>>().apply {
+            addSource(dao.getAllCharacters()) {
+                value = mapper.mapListDbModelToListDomain(it)
+            }
+        }
+
 
     override fun isCharacterInFavorites(id: Int): LiveData<Boolean> =
         dao.isCharacterInFavorites(id)
