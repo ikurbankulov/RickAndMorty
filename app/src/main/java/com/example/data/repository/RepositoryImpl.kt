@@ -21,20 +21,22 @@ class RepositoryImpl(application: Application) : Repository {
     }
 
 
-    override suspend fun getCharacterByIdFromNetWork(id: Int): Character {
-        return mapper.mapFromDto(network.loadCharacter(id))
-    }
+    override suspend fun getCharacterByIdFromNetWork(id: Int): Character =
+        mapper.mapFromDto(network.loadCharacter(id))
 
     override suspend fun searchCharacterFromNetWork(name: String): List<Character> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getCharactersFromDatabase(): LiveData<List<Character>> =
+    override fun getCharactersFromDatabase(): LiveData<List<Character>> =
         MediatorLiveData<List<Character>>().apply {
             addSource(dao.getAllCharacters()) { characterDbModels ->
                 value = mapper.mapListDbModelToListDomain(characterDbModels)
             }
         }
+
+    override fun isCharacterInFavorites(id: Int): LiveData<Boolean> =
+        dao.isCharacterInFavorites(id)
 
     override suspend fun addToFavourites(character: Character) {
         dao.insertCharacter(mapper.mapToDbModel(character))

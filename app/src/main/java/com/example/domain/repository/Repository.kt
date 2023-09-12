@@ -11,10 +11,12 @@ interface Repository {
 
     suspend fun searchCharacterFromNetWork(name: String): List<Character>
 
-    suspend fun getCharactersFromDatabase(): LiveData<List<Character>>
-
     suspend fun addToFavourites(character: Character)
 
     suspend fun removeFromFavourites(id: Int)
+
+    fun getCharactersFromDatabase(): LiveData<List<Character>>
+
+    fun isCharacterInFavorites(id: Int): LiveData<Boolean>
 
 }
