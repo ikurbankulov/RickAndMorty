@@ -45,13 +45,6 @@ class CharacterListFragment : Fragment() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
     private fun setupClickListener() {
         adapter.onItemClickListener = { character ->
             val characterDetailFragment = CharacterDetailFragment.newInstance(character.id)
@@ -69,14 +62,15 @@ class CharacterListFragment : Fragment() {
         }
     }
 
-
+    private fun replaceFragment(fragment: Fragment) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() = CharacterListFragment()
     }
 }

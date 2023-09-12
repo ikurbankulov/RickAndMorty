@@ -8,13 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.RepositoryImpl
 import com.example.domain.models.Character
+import com.example.domain.use_cases.GetCharactersFromDatabaseUseCase
 import com.example.domain.use_cases.GetCharactersFromNetWorkUseCase
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = RepositoryImpl(application)
-    private val getCharactersFromNetWorkUseCase = GetCharactersFromNetWorkUseCase(repository)
+    private val getCharactersFromDb = GetCharactersFromDatabaseUseCase(repository)
 
     private val _characterList = MutableLiveData<List<Character>>()
     val characterList: LiveData<List<Character>> = _characterList
@@ -24,9 +25,8 @@ class FavouriteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun loadCharacterList() {
-        viewModelScope.launch {
-            val characterList = getCharactersFromNetWorkUseCase.invoke()
-            _characterList.value = characterList
-        }
+        val characterList = getCharactersFromDb.invoke()
+        _characterList.value = characterList.value
+
     }
 }

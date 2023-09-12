@@ -22,8 +22,6 @@ class CharacterDetailViewModel(application: Application) : AndroidViewModel(appl
     private val removeFromFavouritesUseCase = RemoveFromFavouritesUseCase(repository)
 
 
-    private val mapper = Mapper()
-
     private val _character = MutableLiveData<Character>()
     val character: LiveData<Character> = _character
 
