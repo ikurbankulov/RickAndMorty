@@ -2,22 +2,19 @@ package com.example.presentation.screens.detail
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharacterDetailBinding
 
 class CharacterDetailFragment : Fragment() {
 
     private lateinit var viewModel: CharacterDetailViewModel
     private var _binding: FragmentCharacterDetailBinding? = null
-    private val binding
-        get() = _binding ?: throw RuntimeException(BINDING_NULL_MESSAGE)
+    private val binding get() = _binding!!
 
     private var isFavorite = false
 
@@ -31,44 +28,55 @@ class CharacterDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: ")
         viewModel = ViewModelProvider(this)[CharacterDetailViewModel::class.java]
-        val characterId = requireArguments().getInt(EXTRA_ID)
-        characterId.let { viewModel.loadCharacter(it) }
 
-        viewModel.character.observe(viewLifecycleOwner) {
+        val characterId = requireArguments().getInt(EXTRA_ID)
+        viewModel.loadCharacter(characterId)
+
+        setupUI()
+        checkIsCharacterInFavourite(characterId)
+
+        binding.favouriteImageView.setOnClickListener {
+            toggleFavoriteState()
+        }
+    }
+
+    private fun setupUI() {
+        viewModel.character.observe(viewLifecycleOwner) { character ->
             Glide.with(this)
-                .load(it.image)
+                .load(character.image)
                 .override(500, 500)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.imageViewCharacter)
 
             with(binding) {
-                textViewCharacterName.text = it.name
-                textViewStatus.text = it.status
-                textViewGender.text = it.gender
-                textViewSpecies.text = it.species
-                textViewGenderLocation.text = it.location.name
+                textViewCharacterName.text = character.name
+                textViewStatus.text = character.status
+                textViewGender.text = character.gender
+                textViewSpecies.text = character.species
+                textViewGenderLocation.text = character.location.name
             }
         }
+    }
 
+    private fun checkIsCharacterInFavourite(characterId: Int) {
         viewModel.isCharacterInFavorites(characterId).observe(viewLifecycleOwner) { isFav ->
             isFavorite = isFav
             updateFavoriteIcon()
         }
+    }
 
 
-        binding.favouriteImageView.setOnClickListener {
-            val character = viewModel.character.value
-            character?.let {
-                if (isFavorite) {
-                    viewModel.removeFromFavourites(it)
-                } else {
-                    viewModel.addToFavourites(it)
-                }
-                isFavorite = !isFavorite
-                updateFavoriteIcon()
+    private fun toggleFavoriteState() {
+        val character = viewModel.character.value
+        character?.let {
+            if (isFavorite) {
+                viewModel.removeFromFavourites(it)
+            } else {
+                viewModel.addToFavourites(it)
             }
+            isFavorite = !isFavorite
+            updateFavoriteIcon()
         }
     }
 
@@ -88,10 +96,8 @@ class CharacterDetailFragment : Fragment() {
 
     companion object {
         private const val EXTRA_ID = "extra_id"
-        private const val TAG = "CharacterDetailFragment"
-        private const val BINDING_NULL_MESSAGE = "FragmentCharacterDetailBinding is null"
 
-        fun newInstance(id: Int): Fragment {
+        fun newInstance(id: Int): CharacterDetailFragment {
             return CharacterDetailFragment().apply {
                 arguments = Bundle().apply {
                     putInt(EXTRA_ID, id)
@@ -100,3 +106,4 @@ class CharacterDetailFragment : Fragment() {
         }
     }
 }
+

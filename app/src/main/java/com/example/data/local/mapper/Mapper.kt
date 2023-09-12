@@ -27,4 +27,27 @@ class Mapper {
             url = location.url
         )
     }
+
+    fun mapToCharacter(dbModel: CharacterDbModel): Character {
+        return Character(
+            id = dbModel.id,
+            name = dbModel.name,
+            status = dbModel.status,
+            image = dbModel.image,
+            gender = dbModel.gender,
+            location = mapToLocation(dbModel.location),
+            species = dbModel.species,
+            type = dbModel.type,
+            url = dbModel.url
+        )
+    }
+
+    private fun mapToLocation(locationDbModel: LocationDbModel): Location {
+        return Location(
+            name = locationDbModel.name,
+            url = locationDbModel.url
+        )
+    }
+
+
 }

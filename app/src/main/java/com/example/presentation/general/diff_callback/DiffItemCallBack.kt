@@ -1,4 +1,4 @@
-package com.example.presentation.screens.list.adapter
+package com.example.presentation.general.diff_callback
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.domain.models.Character

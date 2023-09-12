@@ -1,14 +1,20 @@
 package com.example.domain.repository
 
-import com.example.data.network.paging.PagingSource
+import androidx.lifecycle.LiveData
 import com.example.domain.models.Character
 
 interface Repository {
 
-    suspend fun getCharacterList(): List<Character>
+    suspend fun getCharactersFromNetWork(): List<Character>
 
-    suspend fun getCharacterById(id: Int): Character
+    suspend fun getCharacterByIdFromNetWork(id: Int): Character
 
-    suspend fun searchCharacter(name: String): List<Character>
+    suspend fun searchCharacterFromNetWork(name: String): List<Character>
+
+    suspend fun getCharactersFromDatabase(): LiveData<List<Character>>
+
+    suspend fun addToFavourites(character: Character)
+
+    suspend fun removeFromFavourites(id: Int)
 
 }

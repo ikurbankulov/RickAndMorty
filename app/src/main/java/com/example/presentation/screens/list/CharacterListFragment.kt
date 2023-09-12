@@ -1,27 +1,17 @@
 package com.example.presentation.screens.list
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.data.local.database.DataBase
-import com.example.data.local.models.CharacterDbModel
-import com.example.data.local.models.LocationDbModel
-import com.example.domain.models.Character
-import com.example.domain.models.Location
 import com.example.presentation.screens.detail.CharacterDetailFragment
 import com.example.presentation.screens.favourite.FavouriteFragment
-import com.example.presentation.screens.list.adapter.RecyclerViewAdapter
+import com.example.presentation.screens.list.adapter.CharacterAdapter
 import com.example.presentation.screens.search.SearchFragment
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharacterListBinding
-import kotlinx.coroutines.launch
 
 class CharacterListFragment : Fragment() {
 
@@ -30,7 +20,7 @@ class CharacterListFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentCharacterListBinding is null")
 
     private lateinit var viewModel: CharacterListViewModel
-    private lateinit var adapter: RecyclerViewAdapter
+    private lateinit var adapter: CharacterAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +37,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun init() {
-        adapter = RecyclerViewAdapter()
+        adapter = CharacterAdapter()
         binding.recyclerViewCharacters.adapter = adapter
         viewModel = ViewModelProvider(this)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
