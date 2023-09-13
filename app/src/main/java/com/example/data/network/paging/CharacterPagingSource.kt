@@ -5,9 +5,7 @@ import androidx.paging.PagingState
 import com.example.data.network.models.CharacterDto
 import com.example.data.network.source.ApiService
 
-class PagingSource(
-    private val api: ApiService
-) : PagingSource<Int, CharacterDto>() {
+class CharacterPagingSource(private val api: ApiService) : PagingSource<Int, CharacterDto>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterDto> {
         return try {

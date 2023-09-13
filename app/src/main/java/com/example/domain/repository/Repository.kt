@@ -1,11 +1,14 @@
 package com.example.domain.repository
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingData
+import com.example.data.network.models.CharacterDto
 import com.example.domain.models.Character
+import kotlinx.coroutines.flow.Flow
 
 interface Repository {
-
-    suspend fun getCharactersFromNetWork(): List<Character>
+    // TODO: change return type to domain model
+    suspend fun getCharactersFromNetWork(): LiveData<PagingData<CharacterDto>>
 
     suspend fun getCharacterByIdFromNetWork(id: Int): Character
 
