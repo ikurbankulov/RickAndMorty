@@ -15,5 +15,7 @@ interface ApiService {
     @GET("character/{id}")
     suspend fun loadCharacter(@Path("id") id: Int): CharacterDto
 
-suspend fun searchCharacter(name: String): List<CharacterDto>
+    @GET("character")
+    suspend fun searchCharacter(@Query("name") name: String): ResponseDto
+
 }

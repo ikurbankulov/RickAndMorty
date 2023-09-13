@@ -16,17 +16,31 @@ class RepositoryImpl(application: Application) : Repository {
     private val dao = AppDataBase.getInstance(application).characterDao()
 
     override suspend fun getCharactersFromNetWork(): List<Character> {
-        val characterDtoList = network.loadCharacters(page = 2).result
-        return mapper.mapListDtoToListDomain(characterDtoList)
+        return try {
+            val characterDtoList = network.loadCharacters(page = 2).result
+            mapper.mapListDtoToListDomain(characterDtoList)
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
-
-    override suspend fun getCharacterByIdFromNetWork(id: Int): Character =
-        mapper.mapFromDto(network.loadCharacter(id))
+    override suspend fun getCharacterByIdFromNetWork(id: Int): Character {
+        return try {
+            mapper.mapFromDto(network.loadCharacter(id))
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 
     override suspend fun searchCharacterFromNetWork(name: String): List<Character> {
-        TODO("Not yet implemented")
+        return try {
+            val searchList = network.searchCharacter(name).result
+            mapper.mapListDtoToListDomain(searchList)
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
+
 
     override fun getCharactersFromDatabase(): LiveData<List<Character>> =
         MediatorLiveData<List<Character>>().apply {
@@ -34,7 +48,6 @@ class RepositoryImpl(application: Application) : Repository {
                 value = mapper.mapListDbModelToListDomain(it)
             }
         }
-
 
     override fun isCharacterInFavorites(id: Int): LiveData<Boolean> =
         dao.isCharacterInFavorites(id)
@@ -46,6 +59,6 @@ class RepositoryImpl(application: Application) : Repository {
     override suspend fun removeFromFavourites(id: Int) {
         dao.deleteCharacter(id)
     }
-
-
 }
+
+

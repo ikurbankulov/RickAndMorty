@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.presentation.screens.detail.CharacterDetailFragment
 import com.example.presentation.screens.favourite.FavouriteFragment
-import com.example.presentation.screens.list.adapter.CharacterAdapter
+import com.example.presentation.screens.search.adapter.SearchAdapter
 import com.example.presentation.screens.search.SearchFragment
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentCharacterListBinding
@@ -20,7 +20,7 @@ class CharacterListFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentCharacterListBinding is null")
 
     private lateinit var viewModel: CharacterListViewModel
-    private lateinit var adapter: CharacterAdapter
+    private lateinit var adapter: SearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,7 +37,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun init() {
-        adapter = CharacterAdapter()
+        adapter = SearchAdapter()
         binding.recyclerViewCharacters.adapter = adapter
         viewModel = ViewModelProvider(this)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
@@ -47,7 +47,8 @@ class CharacterListFragment : Fragment() {
 
     private fun setupClickListener() {
         adapter.onItemClickListener = { character ->
-            val characterDetailFragment = CharacterDetailFragment.newInstance(character.id)
+            val characterDetailFragment =
+                CharacterDetailFragment.newInstance(character.id)
             replaceFragment(characterDetailFragment)
         }
 

@@ -1,4 +1,4 @@
-package com.example.presentation.screens.list.adapter
+package com.example.presentation.screens.search.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.example.presentation.general.diff_callback.DiffItemCallBack
 import com.example.presentation.screens.search.adapter.SearchViewHolder
 import com.example.rickandmorty.databinding.CharacterItemBinding
 
-class CharacterAdapter(var onItemClickListener: ((Character) -> Unit)? = null) :
+class SearchAdapter(var onItemClickListener: ((Character) -> Unit)? = null) :
     ListAdapter<Character, SearchViewHolder>(DiffItemCallBack.DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
