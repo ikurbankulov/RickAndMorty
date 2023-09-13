@@ -2,16 +2,16 @@ package com.example.presentation.screens.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.domain.models.Character
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagingDataAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.domain.models.Character
 import com.example.presentation.general.diff_callback.DiffItemCallBack
 import com.example.presentation.screens.search.adapter.SearchViewHolder
 import com.example.rickandmorty.databinding.CharacterItemBinding
 
 class CharacterAdapter(var onItemClickListener: ((Character) -> Unit)? = null) :
-    ListAdapter<Character, SearchViewHolder>(DiffItemCallBack.DiffCallback()) {
+    PagingDataAdapter<Character, SearchViewHolder>(DiffItemCallBack.DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val binding =
@@ -20,7 +20,7 @@ class CharacterAdapter(var onItemClickListener: ((Character) -> Unit)? = null) :
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        val character = getItem(position)
+        val character = getItem(position) ?: return
         Glide.with(holder.itemView)
             .load(character.image)
             .diskCacheStrategy(DiskCacheStrategy.ALL)

@@ -7,8 +7,8 @@ import com.example.domain.models.Character
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
-    // TODO: change return type to domain model
-    suspend fun getCharactersFromNetWork(): LiveData<PagingData<CharacterDto>>
+
+    suspend fun getCharactersFromNetWork(): LiveData<PagingData<Character>>
 
     suspend fun getCharacterByIdFromNetWork(id: Int): Character
 

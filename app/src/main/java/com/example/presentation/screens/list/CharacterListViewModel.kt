@@ -18,17 +18,13 @@ class CharacterListViewModel(application: Application) : AndroidViewModel(applic
     private val repository = RepositoryImpl(application)
     private val getCharactersFromNetWorkUseCase = GetCharactersFromNetWorkUseCase(repository)
 
-    private val _characterList = MutableLiveData<PagingData<CharacterDto>>()
-    val characterList: LiveData<PagingData<CharacterDto>> = _characterList
 
-    init {
-        loadCharacterList()
-    }
-
-    private fun loadCharacterList() {
-        viewModelScope.launch {
-            val characterList = getCharactersFromNetWorkUseCase.invoke()
-            _characterList.value = characterList
-        }
-    }
+      private val _characterList = MutableLiveData<PagingData<Character>>()
+      val characterList: LiveData<PagingData<Character>> = _characterList
+       fun loadCharacterList() {
+          viewModelScope.launch {
+              val characterList = getCharactersFromNetWorkUseCase.invoke()
+              _characterList.value = characterList.value
+          }
+      }
 }
