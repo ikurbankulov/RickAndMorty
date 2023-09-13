@@ -55,6 +55,12 @@ class FavouriteFragment : Fragment() {
 
     private fun replaceFragment(fragment: Fragment){
         requireActivity().supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                android.R.anim.slide_in_left,
+                android.R.anim.slide_out_right,
+                android.R.anim.slide_in_left,
+                android.R.anim.slide_out_right
+            )
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
             .commit()
