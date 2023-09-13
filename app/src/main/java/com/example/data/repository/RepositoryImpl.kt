@@ -27,12 +27,23 @@ class RepositoryImpl(application: Application) : Repository {
     private val network = ApiFactory.apiService
     private val dao = AppDataBase.getInstance(application).characterDao()
 
-    override suspend fun getCharactersFromNetWork(): LiveData<PagingData<Character>> =
+    override fun getCharactersFromNetWork(): LiveData<PagingData<Character>> =
         createPager(network).liveData.map { pagingData ->
             pagingData.map { characterDto ->
                 mapper.mapFromDto(characterDto)
             }
         }
+
+    private fun createPager(network: ApiService): Pager<Int, CharacterDto> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { CharacterPagingSource(network) }
+        )
+    }
 
     override suspend fun getCharacterByIdFromNetWork(id: Int): Character {
         return try {
@@ -70,16 +81,7 @@ class RepositoryImpl(application: Application) : Repository {
         dao.deleteCharacter(id)
     }
 
-    private fun createPager(network: ApiService): Pager<Int, CharacterDto> {
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                prefetchDistance = PREFETCH_DISTANCE,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { CharacterPagingSource(network) }
-        )
-    }
+
 
 
     private companion object {
@@ -88,12 +90,7 @@ class RepositoryImpl(application: Application) : Repository {
     }
 
 
-    //  return try {
-    //      val characterDtoList = network.loadCharacters(page = 2).result
-    //      mapper.mapListDtoToListDomain(characterDtoList)
-    //  } catch (e: Exception) {
-    //      emptyList()
-    //  }
+
 }
 
 

@@ -18,13 +18,7 @@ class CharacterListViewModel(application: Application) : AndroidViewModel(applic
     private val repository = RepositoryImpl(application)
     private val getCharactersFromNetWorkUseCase = GetCharactersFromNetWorkUseCase(repository)
 
+    val characterList: LiveData<PagingData<Character>>
+        get() = getCharactersFromNetWorkUseCase.invoke()
 
-      private val _characterList = MutableLiveData<PagingData<Character>>()
-      val characterList: LiveData<PagingData<Character>> = _characterList
-       fun loadCharacterList() {
-          viewModelScope.launch {
-              val characterList = getCharactersFromNetWorkUseCase.invoke()
-              _characterList.value = characterList.value
-          }
-      }
 }

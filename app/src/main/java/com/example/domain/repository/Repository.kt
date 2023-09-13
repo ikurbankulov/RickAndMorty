@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun getCharactersFromNetWork(): LiveData<PagingData<Character>>
+     fun getCharactersFromNetWork(): LiveData<PagingData<Character>>
 
     suspend fun getCharacterByIdFromNetWork(id: Int): Character
 

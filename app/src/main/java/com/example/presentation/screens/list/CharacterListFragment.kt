@@ -1,6 +1,7 @@
 package com.example.presentation.screens.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,12 +45,10 @@ class CharacterListFragment : Fragment() {
         binding.recyclerViewCharacters.adapter = adapter
         viewModel = ViewModelProvider(this)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
-
-            viewModel.loadCharacterList()
+            Log.d("Test", it.toString())
             viewLifecycleOwner.lifecycleScope.launch {
-                adapter.submitData(lifecycle, it)
+                adapter.submitData(it)
             }
-
         }
     }
 

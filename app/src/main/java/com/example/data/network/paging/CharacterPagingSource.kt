@@ -1,5 +1,6 @@
 package com.example.data.network.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.data.network.models.CharacterDto
@@ -21,6 +22,7 @@ class CharacterPagingSource(private val api: ApiService) : PagingSource<Int, Cha
                 nextKey = nextPage
             )
         } catch (e: Exception) {
+            Log.e("CharacterPagingSource", e.toString())
             LoadResult.Error(e)
         }
     }
