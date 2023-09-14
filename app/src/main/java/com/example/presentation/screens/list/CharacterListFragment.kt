@@ -56,7 +56,7 @@ class CharacterListFragment : Fragment() {
     private fun init() {
         adapter = CharacterAdapter()
         stateAdapter = DefaultLoadStateAdapter()
-        binding.recyclerViewCharacters.adapter = adapter.withLoadStateHeader(stateAdapter)
+        binding.recyclerViewCharacters.adapter = adapter.withLoadStateFooter(stateAdapter)
         viewModel = ViewModelProvider(this, viewModelFactory)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
 
