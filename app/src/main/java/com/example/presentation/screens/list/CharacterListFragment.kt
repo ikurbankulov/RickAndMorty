@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.core.App
+import com.example.presentation.general.state_adapter.DefaultLoadStateAdapter
 import com.example.presentation.general.viewmodel_factory.ViewModelFactory
 import com.example.presentation.screens.detail.CharacterDetailFragment
 import com.example.presentation.screens.favourite.FavouriteFragment
@@ -34,6 +35,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private lateinit var adapter: CharacterAdapter
+    private lateinit var stateAdapter: DefaultLoadStateAdapter
 
 
     override fun onCreateView(
@@ -53,7 +55,8 @@ class CharacterListFragment : Fragment() {
 
     private fun init() {
         adapter = CharacterAdapter()
-        binding.recyclerViewCharacters.adapter = adapter
+        stateAdapter = DefaultLoadStateAdapter()
+        binding.recyclerViewCharacters.adapter = adapter.withLoadStateHeader(stateAdapter)
         viewModel = ViewModelProvider(this, viewModelFactory)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
 

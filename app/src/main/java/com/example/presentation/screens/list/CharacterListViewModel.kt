@@ -15,3 +15,4 @@ class CharacterListViewModel @Inject constructor(
         get() = getCharactersFromNetWorkUseCase.invoke()
 
 }
+
