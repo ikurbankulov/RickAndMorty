@@ -1,5 +1,6 @@
 package com.example.presentation.screens.search
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,10 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import com.example.core.App
+import com.example.presentation.general.viewmodel_factory.ViewModelFactory
 import com.example.presentation.screens.detail.CharacterDetailFragment
 import com.example.presentation.screens.search.adapter.SearchAdapter
 import com.example.rickandmorty.R
 import com.example.rickandmorty.databinding.FragmentSearchBinding
+import javax.inject.Inject
 
 class SearchFragment : Fragment() {
 
@@ -18,8 +22,14 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding ?: throw RuntimeException("FragmentSearchBinding is null")
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: SearchViewModel
     private lateinit var adapter: SearchAdapter
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +48,7 @@ class SearchFragment : Fragment() {
     private fun init() {
         adapter = SearchAdapter()
         binding.recyclerViewCharacters.adapter = adapter
-        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[SearchViewModel::class.java]
         viewModel.searchList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
@@ -84,6 +94,11 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
     }
 
     companion object {

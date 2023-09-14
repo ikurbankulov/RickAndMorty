@@ -1,5 +1,6 @@
 package com.example.presentation.screens.detail
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,13 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.core.App
+import com.example.presentation.general.viewmodel_factory.ViewModelFactory
 import com.example.rickandmorty.databinding.FragmentCharacterDetailBinding
+import javax.inject.Inject
 
 class CharacterDetailFragment : Fragment() {
 
     private lateinit var viewModel: CharacterDetailViewModel
     private var _binding: FragmentCharacterDetailBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (requireActivity().application as App).component
+    }
 
     private var isFavorite = false
 
@@ -28,7 +39,7 @@ class CharacterDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[CharacterDetailViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[CharacterDetailViewModel::class.java]
 
         val characterId = requireArguments().getInt(EXTRA_ID)
         viewModel.loadCharacter(characterId)
@@ -92,6 +103,11 @@ class CharacterDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        component.inject(this)
     }
 
     companion object {

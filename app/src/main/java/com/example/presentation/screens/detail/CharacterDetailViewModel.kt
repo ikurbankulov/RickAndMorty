@@ -1,25 +1,23 @@
 package com.example.presentation.screens.detail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.local.mapper.Mapper
-import com.example.data.repository.RepositoryImpl
 import com.example.domain.models.Character
 import com.example.domain.use_cases.AddToFavouritesUseCase
 import com.example.domain.use_cases.GetCharacterByIdFromNetWorkUseCase
+import com.example.domain.use_cases.IsCharacterInFavoritesUseCase
 import com.example.domain.use_cases.RemoveFromFavouritesUseCase
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CharacterDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = RepositoryImpl(application)
-
-    private val getCharacterByIdFromNetWorkUseCase = GetCharacterByIdFromNetWorkUseCase(repository)
-    private val addToFavouritesUseCase = AddToFavouritesUseCase(repository)
-    private val removeFromFavouritesUseCase = RemoveFromFavouritesUseCase(repository)
+class CharacterDetailViewModel @Inject constructor(
+    private val getCharacterByIdFromNetWorkUseCase: GetCharacterByIdFromNetWorkUseCase,
+    private val addToFavouritesUseCase: AddToFavouritesUseCase,
+    private val removeFromFavouritesUseCase: RemoveFromFavouritesUseCase,
+    private val isCharacterInFavoritesUseCase: IsCharacterInFavoritesUseCase
+) : ViewModel() {
 
 
     private val _character = MutableLiveData<Character>()
@@ -45,7 +43,7 @@ class CharacterDetailViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun isCharacterInFavorites(id: Int): LiveData<Boolean> {
-        return repository.isCharacterInFavorites(id)
+        return isCharacterInFavoritesUseCase(id)
     }
 
 }

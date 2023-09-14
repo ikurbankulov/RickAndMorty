@@ -1,8 +1,8 @@
 package com.example.domain.use_cases
 
-import androidx.lifecycle.LiveData
 import com.example.domain.repository.Repository
+import javax.inject.Inject
 
-class IsCharacterInFavoritesUseCase(private val repository: Repository) {
-    suspend operator fun invoke(id: Int) = repository.isCharacterInFavorites(id)
+class IsCharacterInFavoritesUseCase @Inject constructor(private val repository: Repository) {
+     operator fun invoke(id: Int) = repository.isCharacterInFavorites(id)
 }

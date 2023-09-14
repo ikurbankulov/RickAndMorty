@@ -6,8 +6,9 @@ import com.example.data.network.models.CharacterDto
 import com.example.data.network.models.LocationDto
 import com.example.domain.models.Character
 import com.example.domain.models.Location
+import javax.inject.Inject
 
-class Mapper {
+class Mapper @Inject constructor() {
 
     fun mapListDbModelToListDomain(list: List<CharacterDbModel>) = list.map {
         mapFromDbModel(it)
@@ -25,20 +26,6 @@ class Mapper {
             image = type.image,
             gender = type.gender,
             location = type.location.mapToLocation(),
-            species = type.species,
-            type = type.type,
-            url = type.url,
-        )
-    }
-
-    fun mapToDto(type: Character): CharacterDto {
-        return CharacterDto(
-            id = type.id,
-            name = type.name,
-            status = type.status,
-            image = type.image,
-            gender = type.gender,
-            location = type.location.mapToLocationDto(),
             species = type.species,
             type = type.type,
             url = type.url,
