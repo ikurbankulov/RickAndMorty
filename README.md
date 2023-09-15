@@ -1,7 +1,7 @@
 # RickAndMorty
  test task for Small
  
-STACK: Kotlin, CleanArchitecture, MVVM, SingleActivity, LiveData, Coroutines, Dagger2, Paging 3, Room, Retrofit, Glide, ViewBinding
+# STACK: Kotlin, CleanArchitecture, MVVM, SingleActivity, LiveData, Coroutines, Dagger2, Paging 3, Room, Retrofit, Glide, ViewBinding
 
 Приложение отображает список персонажей из мультсериала "Rick and Morty", 
 в приложении реализовано добавление персонажей в список избранного, а так же поиск персонажей,
