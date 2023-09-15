@@ -37,7 +37,6 @@ class CharacterListFragment : Fragment() {
     private lateinit var adapter: CharacterAdapter
     private lateinit var stateAdapter: DefaultLoadStateAdapter
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,17 +48,16 @@ class CharacterListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+        initData()
         setupClickListener()
     }
 
-    private fun init() {
+    private fun initData() {
         adapter = CharacterAdapter()
         stateAdapter = DefaultLoadStateAdapter()
         binding.recyclerViewCharacters.adapter = adapter.withLoadStateFooter(stateAdapter)
         viewModel = ViewModelProvider(this, viewModelFactory)[CharacterListViewModel::class.java]
         viewModel.characterList.observe(viewLifecycleOwner) {
-
             viewLifecycleOwner.lifecycleScope.launch {
                 adapter.submitData(it)
             }
