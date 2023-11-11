@@ -1,5 +1,6 @@
 package com.example.data.repository
 
+import android.net.http.NetworkException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.map
@@ -32,11 +33,19 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun getCharacterByIdFromNetWork(id: Int): Character {
         return try {
-            mapper.mapFromDto(ApiFactory.apiService.loadCharacter(id))
+            val response = ApiFactory.apiService.loadCharacter(id)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    mapper.mapFromDto(it)
+                } ?: throw NullPointerException("Response body is null")
+            } else {
+                throw Exception("Network request failed with code ${response.code()}")
+            }
         } catch (e: Exception) {
             throw e
         }
     }
+
 
     override suspend fun searchCharacterFromNetWork(name: String): List<Character> {
         return try {
