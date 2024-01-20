@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+            var a = 0
+            var b = 10
+            var c = b/a
     }
 
     override fun onDestroy() {

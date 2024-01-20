@@ -1,5 +1,7 @@
 package com.example.presentation.screens.detail
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,12 +25,28 @@ class CharacterDetailViewModel @Inject constructor(
     private val _character = MutableLiveData<Character>()
     val character: LiveData<Character> = _character
 
+    private val _error = MutableLiveData<Throwable?>()
+    val error: LiveData<Throwable?> = _error
+
     fun loadCharacter(id: Int) {
         viewModelScope.launch {
-            val character = getCharacterByIdFromNetWorkUseCase(id)
-            _character.value = character
+            try {
+                val result = getCharacterByIdFromNetWorkUseCase(id)
+                when {
+                    result.isSuccess -> {
+                        _character.value = result.getOrNull()
+                    }
+                    result.isFailure -> {
+                        _error.value = result.exceptionOrNull()
+                    }
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки в случае timeout или других сетевых проблем
+                _error.value = e
+            }
         }
     }
+
 
     fun addToFavourites(character: Character) {
         viewModelScope.launch {

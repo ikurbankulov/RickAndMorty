@@ -1,6 +1,6 @@
 package com.example.data.repository
 
-import android.net.http.NetworkException
+import android.accounts.NetworkErrorException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.map
@@ -20,71 +20,72 @@ import com.example.domain.repository.Repository
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    private val mapper: Mapper,
-    private val dao: CharacterDao
+        private val mapper: Mapper,
+        private val dao: CharacterDao
 ) : Repository {
 
-    override fun getCharactersFromNetWork(): LiveData<PagingData<Character>> =
-        createPager(ApiFactory.apiService).liveData.map { pagingData ->
-            pagingData.map { characterDto ->
-                mapper.mapFromDto(characterDto)
-            }
+        override fun getCharactersFromNetWork(): LiveData<PagingData<Character>> =
+                createPager(ApiFactory.apiService).liveData.map { pagingData ->
+                        pagingData.map { characterDto ->
+                                mapper.mapFromDto(characterDto)
+                        }
+                }
+
+        override suspend fun getCharacterByIdFromNetWork(id: Int): Result<Character> {
+                return try {
+                        val response = ApiFactory.apiService.loadCharacter(id)
+                        if (response.isSuccessful) {
+                                response.body()?.let { characterDto ->
+                                        Result.success(mapper.mapFromDto(characterDto))
+                                } ?: Result.failure(NullPointerException("Character is null"))
+                        } else {
+                                Result.failure(NetworkErrorException())
+                        }
+                } catch (e: Exception) {
+                        Result.failure(e)
+                }
         }
 
-    override suspend fun getCharacterByIdFromNetWork(id: Int): Character {
-        return try {
-            val response = ApiFactory.apiService.loadCharacter(id)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    mapper.mapFromDto(it)
-                } ?: throw NullPointerException("Response body is null")
-            } else {
-                throw Exception("Network request failed with code ${response.code()}")
-            }
-        } catch (e: Exception) {
-            throw e
-        }
-    }
 
-
-    override suspend fun searchCharacterFromNetWork(name: String): List<Character> {
-        return try {
-            val searchList = ApiFactory.apiService.searchCharacter(name).result
-            mapper.mapListDtoToListDomain(searchList)
-        } catch (e: Exception) {
-            emptyList()
-        }
-    }
-
-    override fun getCharactersFromDatabase(): LiveData<List<Character>> =
-        MediatorLiveData<List<Character>>().apply {
-            addSource(dao.getAllCharacters()) {
-                value = mapper.mapListDbModelToListDomain(it)
-            }
+        override suspend fun searchCharacterFromNetWork(name: String): List<Character> {
+                return try {
+                        val searchList = ApiFactory.apiService.searchCharacter(name).result
+                        mapper.mapListDtoToListDomain(searchList)
+                } catch (e: Exception) {
+                        emptyList()
+                }
         }
 
-    override fun isCharacterInFavorites(id: Int): LiveData<Boolean> = dao.isCharacterInFavorites(id)
+        override fun getCharactersFromDatabase(): LiveData<List<Character>> =
+                MediatorLiveData<List<Character>>().apply {
+                        addSource(dao.getAllCharacters()) {
+                                value = mapper.mapListDbModelToListDomain(it)
+                        }
+                }
 
-    override suspend fun addToFavourites(character: Character) {
-        dao.insertCharacter(mapper.mapToDbModel(character))
-    }
+        override fun isCharacterInFavorites(id: Int): LiveData<Boolean> =
+                dao.isCharacterInFavorites(id)
 
-    override suspend fun removeFromFavourites(id: Int) {
-        dao.deleteCharacter(id)
-    }
+        override suspend fun addToFavourites(character: Character) {
+                dao.insertCharacter(mapper.mapToDbModel(character))
+        }
 
-    private fun createPager(apiService: ApiService): Pager<Int, CharacterDto> {
-        return Pager(config = PagingConfig(
-            pageSize = PAGE_SIZE,
-            prefetchDistance = PREFETCH_DISTANCE,
-            enablePlaceholders = false
-        ), pagingSourceFactory = { CharacterPagingSource(apiService) })
-    }
+        override suspend fun removeFromFavourites(id: Int) {
+                dao.deleteCharacter(id)
+        }
 
-    private companion object {
-        const val PAGE_SIZE = 20
-        const val PREFETCH_DISTANCE = 5
-    }
+        private fun createPager(apiService: ApiService): Pager<Int, CharacterDto> {
+                return Pager(config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        prefetchDistance = PREFETCH_DISTANCE,
+                        enablePlaceholders = false
+                ), pagingSourceFactory = { CharacterPagingSource(apiService) })
+        }
+
+        private companion object {
+                const val PAGE_SIZE = 20
+                const val PREFETCH_DISTANCE = 5
+        }
 }
 
 

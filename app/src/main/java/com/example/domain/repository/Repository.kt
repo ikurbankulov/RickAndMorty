@@ -10,7 +10,7 @@ interface Repository {
 
      fun getCharactersFromNetWork(): LiveData<PagingData<Character>>
 
-    suspend fun getCharacterByIdFromNetWork(id: Int): Character
+    suspend fun getCharacterByIdFromNetWork(id: Int): Result<Character>
 
     suspend fun searchCharacterFromNetWork(name: String): List<Character>
 
